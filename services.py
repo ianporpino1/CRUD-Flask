@@ -1,7 +1,7 @@
 import repositories as repo
 from datetime import datetime, timedelta
 from models import User, Sale
-
+from exceptions import *
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -11,8 +11,12 @@ from io import BytesIO
 
 
 def register_user(email, password):
+    if not validar_email(email=email):
+        raise InvalidInputError(message="Invalid Email")
+    
     if repo.get_user_by_email(email):
-        return {"msg": "User already exists"}, 400
+        raise UserAlreadyExistsError
+    
     new_user = User(email=email)
     new_user.set_password(password)
     repo.add_user(new_user)
@@ -22,12 +26,16 @@ def authenticate_user(email, password):
     user = repo.get_user_by_email(email)
     if user and user.check_password(password):
         return user
-    return None
+    raise InvalidCredentialsError
 
 def create_sale(nome_cliente, produto, valor, data_venda_str,user_id):
+    #valida os inputs da venda
+    validar_sale(nome_cliente, produto, valor, data_venda_str)
 
+    #cria um datetime para ser armazenado no banco
     data_venda = datetime.strptime(data_venda_str, '%d-%m-%Y')
-
+    
+    
     new_sale = Sale(nome_cliente=nome_cliente, produto=produto, valor=valor, data_venda=data_venda, user_id=user_id)
     repo.add_sale(new_sale)
     return {"msg": "Sale created successfully"}, 201
@@ -42,11 +50,16 @@ def fetch_all_sales():
 
 def update_sale(sale_id, data):
     sale = repo.get_sale_by_id(sale_id)
-
-    data_venda_str = data.get('data_venda')
-
     if not sale:
         return {"msg": "Sale not found"}, 404
+
+    data_venda_str = data.get('data_venda')
+    nome_cliente = data.get('nome_cliente')
+    produto = data.get('produto')
+    valor = data.get('valor')
+    data_venda_str = data.get('data_venda')
+
+    validar_sale(nome_cliente, produto, valor, data_venda_str)
 
     if 'nome_cliente' in data:
         sale.nome_cliente = data.get('nome_cliente')
@@ -88,10 +101,8 @@ def generate_sales_pdf(start_date_str, end_date_str, user_id):
     title_text = f"Relatório de Vendas Entre os dias {start_date.strftime('%d-%m-%Y')} e {end_date.strftime('%d-%m-%Y')}"
     title = Paragraph(title_text, title_style)
     elements.append(title)
-
     
     elements.append(Paragraph("<br/><br/>", title_style))
-
     
     data = [["ID", "Nome do Cliente", "Produto", "Data da Venda", "Valor (R$)"]]
 
@@ -113,12 +124,26 @@ def generate_sales_pdf(start_date_str, end_date_str, user_id):
         ]
     )
 
-    
     elements.append(table)
 
-    
     doc.build(elements)
 
     buffer.seek(0)
     return buffer
 
+def validar_email(email):
+    if '@' in email and '.' in email:
+        return True
+    return False
+
+def validar_sale(nome_cliente, produto, valor, data_venda_str):
+    try:
+        datetime.strptime(data_venda_str, '%d-%m-%Y')
+    except ValueError:
+        raise InvalidInputError("Data Inválida")
+    if nome_cliente == "":
+        raise InvalidInputError("Nome do cliente nao pode ser nulo")
+    if produto == "":
+        raise InvalidInputError("Nome do produto nao pode ser nulo")
+    if isinstance(valor, str) or valor < 0:
+        raise InvalidInputError("Valor nao pode ser string ou negativo")

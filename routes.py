@@ -1,5 +1,6 @@
 from flask import request, jsonify, send_file
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from exceptions import *
 from services import *
 
 def register_routes(app):
@@ -17,12 +18,12 @@ def register_routes(app):
         email = data.get('email')
         password = data.get('password')
 
-        user = authenticate_user(email, password)
-        if user:
-            access_token = create_access_token(identity=email)
-            return jsonify(access_token=access_token), 200
+        #tenta autenticar usuario, se for invalido, lancara uma excecao
+        authenticate_user(email, password) 
+        access_token = create_access_token(identity=email)
+        return jsonify(access_token=access_token), 200
+        
 
-        return jsonify({"msg": "Bad email or password"}), 401
 
     @app.route('/sales', methods=['POST'])
     @jwt_required()
@@ -44,7 +45,7 @@ def register_routes(app):
     @jwt_required()
     def update(sale_id):
         data = request.get_json()
-
+        
         return jsonify(*update_sale(sale_id, data))
 
     @app.route('/sales/<int:sale_id>', methods=['DELETE'])
