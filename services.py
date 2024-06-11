@@ -28,11 +28,9 @@ def authenticate_user(email, password):
         return user
     raise InvalidCredentialsError
 
-def create_sale(nome_cliente, produto, valor, data_venda_str, user_email):
+def create_sale(nome_cliente, produto, valor, data_venda_str, user_id):
     #valida os inputs da venda
-    validar_sale(nome_cliente, produto, valor, data_venda_str, user_email)
-
-    user_id = repo.get_user_id_from_email(user_email)
+    validar_sale(nome_cliente, produto, valor, data_venda_str, user_id)
 
     #cria um datetime para ser armazenado no banco
     data_venda = datetime.strptime(data_venda_str, '%d-%m-%Y')
@@ -49,7 +47,7 @@ def fetch_all_sales():
     return sales_dicts, 200
 
 
-def update_sale(sale_id, data, user_email):
+def update_sale(sale_id, data, user_id):
     sale = repo.get_sale_by_id(sale_id)
     if not sale:
         return {"msg": "Sale not found"}, 404
@@ -60,9 +58,7 @@ def update_sale(sale_id, data, user_email):
     valor = data.get('valor')
     data_venda_str = data.get('data_venda')
 
-    validar_sale(nome_cliente, produto, valor, data_venda_str, user_email)
-
-    user_id = repo.get_user_id_from_email(user_email)
+    validar_sale(nome_cliente, produto, valor, data_venda_str, user_id)
 
     if 'nome_cliente' in data:
         sale.nome_cliente = data.get('nome_cliente')
@@ -87,15 +83,12 @@ def remove_sale(sale_id):
     return {"msg": "Sale deleted successfully"}, 200
 
 
-def generate_sales_pdf(start_date_str, end_date_str, user_email):
+def generate_sales_pdf(start_date_str, end_date_str, user_id):
 
     #por algum motivo, se start_date == data_venda, a venda nao é exibida no pdf
     um_dia = timedelta(days=1)
     start_date = datetime.strptime(start_date_str, '%d-%m-%Y') - um_dia
     end_date = datetime.strptime(end_date_str, '%d-%m-%Y')
-
-    #recupera o id do usuario que solicitou o relatorio
-    user_id = repo.get_user_id_from_email(user_email)
 
     #procura por vendas no periodo especificado
     sales = repo.get_sales_by_period(start_date, end_date, user_id)
@@ -110,7 +103,7 @@ def generate_sales_pdf(start_date_str, end_date_str, user_email):
 
     styles = getSampleStyleSheet()
     title_style = styles["Title"]
-    title_text = f"Relatório de Vendas Entre os dias {start_date.strftime('%d-%m-%Y')} e {end_date.strftime('%d-%m-%Y')}"
+    title_text = f"Relatório de Vendas entre os dias {start_date.strftime('%d-%m-%Y')} e {end_date.strftime('%d-%m-%Y')}"
     title = Paragraph(title_text, title_style)
     elements.append(title)
     
@@ -148,7 +141,7 @@ def validar_email(email):
         return True
     return False
 
-def validar_sale(nome_cliente, produto, valor, data_venda_str, user_email):
+def validar_sale(nome_cliente, produto, valor, data_venda_str, user_id):
     try:
         datetime.strptime(data_venda_str, '%d-%m-%Y')
     except ValueError:
@@ -159,6 +152,6 @@ def validar_sale(nome_cliente, produto, valor, data_venda_str, user_email):
         raise InvalidInputError("Nome do produto nao pode ser nulo")
     if isinstance(valor, str) or valor < 0:
         raise InvalidInputError("Valor nao pode ser string ou negativo")
-    user_id = repo.get_user_id_from_email(user_email)
-    if not user_id:
+    user = repo.get_user_by_id(user_id)
+    if not user:
         raise InvalidInputError("User ID não encontrado")

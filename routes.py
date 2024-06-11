@@ -21,8 +21,8 @@ def register_routes(app):
         password = data.get('password')
 
         #tenta autenticar usuario, se for invalido, lancara uma excecao
-        authenticate_user(email, password) 
-        access_token = create_access_token(identity=email)
+        user = authenticate_user(email, password) 
+        access_token = create_access_token(identity=user.id)
         return jsonify(access_token=access_token), 200
         
 
@@ -31,13 +31,12 @@ def register_routes(app):
     @jwt_required()
     def create():
         data = request.get_json()
-        user_email =  get_jwt_identity()
-        
+        user_id =  get_jwt_identity()
         nome_cliente = data.get('nome_cliente')
         produto = data.get('produto')
         valor = data.get('valor')
         data_venda = data.get('data_venda')
-        return jsonify(*create_sale(nome_cliente, produto, valor, data_venda,user_email))
+        return jsonify(*create_sale(nome_cliente, produto, valor, data_venda,user_id))
 
     #Permite usuarios logados ver todas as vendas
     @app.route('/sales', methods=['GET'])
@@ -50,8 +49,8 @@ def register_routes(app):
     @jwt_required()
     def update(sale_id):
         data = request.get_json()
-        user_email =  get_jwt_identity()
-        return jsonify(*update_sale(sale_id, data,user_email))
+        user_id =  get_jwt_identity()
+        return jsonify(*update_sale(sale_id, data,user_id))
 
     #Permite usuarios logados deletar vendas
     @app.route('/sales/<int:sale_id>', methods=['DELETE'])
@@ -65,9 +64,9 @@ def register_routes(app):
     def generate_pdf():
         start_date = request.args.get("start_date")
         end_date = request.args.get("end_date")
-        user_email =  get_jwt_identity()
+        user_id =  get_jwt_identity()
 
-        pdf_file =  generate_sales_pdf(start_date,end_date,user_email)
+        pdf_file =  generate_sales_pdf(start_date,end_date,user_id)
         return send_file(pdf_file, as_attachment=True, download_name='sales.pdf')
 
 
