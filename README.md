@@ -62,7 +62,7 @@ No quesito de decisões arquitetônicas, utilizei a arquitetura em camadas. Não
 - Serviços: aqui fica a lógica de negócios e validação de atributos
 - Repositórios: aqui fica a interação com o banco de dados que encapsulam as consultas e operações do banco
 
-No quesito segurança e regras de negócio, fiz com que um usuário logado possa alterar vendas criadas por outros usuários, se isso acontecer o user_id da venda também é atualizado e, ao gerar o pdf só aparecerão as vendas cadastradas pelo usuário logado. Essas diretrizes podem ser modificadas facilmente se esse não for o comportamento esperado.
+No quesito segurança e regras de negócio, fiz com que um usuário logado possa alterar vendas criadas por outros usuários, se isso acontecer, o user_id da venda também é atualizado e, ao gerar o pdf, só aparecerão as vendas cadastradas pelo usuário logado. Essas diretrizes podem ser modificadas facilmente se esse não for o comportamento desejado.
 
 Além disso, uma abordagem com blueprints poderia ser recomendada para organizar as rotas de forma mais modular e escalável. No entanto, devido à falta de conhecimento avançado em Flask, optei por uma abordagem mais direta na definição das rotas.
 
