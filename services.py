@@ -94,9 +94,14 @@ def generate_sales_pdf(start_date_str, end_date_str, user_email):
     start_date = datetime.strptime(start_date_str, '%d-%m-%Y') - um_dia
     end_date = datetime.strptime(end_date_str, '%d-%m-%Y')
 
+    #recupera o id do usuario que solicitou o relatorio
     user_id = repo.get_user_id_from_email(user_email)
 
+    #procura por vendas no periodo especificado
     sales = repo.get_sales_by_period(start_date, end_date, user_id)
+    print(sales)
+    if not sales:
+        raise InvalidInputError("Nenhuma venda encontrada no período especificado.")
 
     buffer = BytesIO()
 
@@ -136,6 +141,7 @@ def generate_sales_pdf(start_date_str, end_date_str, user_email):
 
     buffer.seek(0)
     return buffer
+    
 
 def validar_email(email):
     if '@' in email and '.' in email:

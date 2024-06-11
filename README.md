@@ -27,6 +27,27 @@ Como rodar:
     python app.py
     ```
 
+## Exemplos com 'curl'
+1. Registrar Usuário
+    ```bash
+    curl -X POST http://127.0.0.1:5000/register -d "{\"email\":\"seu@email.com\", \"password\":\"sua_senha\"}" -H "Content-Type: application/json"
+    ```
+
+2. Login Usuário
+    ```bash
+    curl -X POST http://127.0.0.1:5000/login -d "{\"email\":\"seu@email.com\", \"password\":\"sua_senha\"}" -H "Content-Type: application/json"
+    ```
+
+3. Cadastrar Venda
+    ```bash
+    curl -X POST http://127.0.0.1:5000/sales -H "Authorization: Bearer seu_token_aqui" -H "Content-Type: application/json" -d "{\"nome_cliente\": \"nome\", \"produto\": \"nome_produto\", \"valor\": 1000, \"data_venda\": \"10-06-2024\"}"
+    ```
+
+3. Listar Vendas
+    ```bash
+    curl -X GET http://127.0.0.1:5000/sales -H "Authorization: Bearer seu_token_aqui" -H "Content-Type: application/json"
+    ```
+
 ## Endpoints
 
 ### Autenticação
