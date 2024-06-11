@@ -54,17 +54,17 @@ Como rodar:
 
 ## Descrição do Projeto
 
-    Farei uma breve descrição do porquê das escolhas das tecnologias e escolhas arquitetônicas. Primeiramente, utilizei como ORM (Objet Relational Mapper) o SQLAlchemy, que permitiu abstrair configurações e comandos que poderiam ser específicos para um determinado SGBD, tornando mais fácil uma possível alteração no banco, necessitando apenas de um update no driver. Para implementar a autenticação com JWT utilizei o Flask-JWT-Extended que simplifica esse processo sem perder muito o controle sobre configuracões do JWT. Porém, uma desvantagem de se utilizar essa biblioteca é que ela pode ser descontinuada com o passar dos anos, podendo levar a problemas de manutenção e compatibilidade no longo prazo. Por último, para criar o PDF, utilizei a biblioteca Reportlab que é versátil, flexível e dá controle total sobre o layout e conteúdo.
+Farei uma breve descrição do porquê das escolhas das tecnologias e escolhas arquitetônicas. Primeiramente, utilizei como ORM (Objet Relational Mapper) o SQLAlchemy, que permitiu abstrair configurações e comandos que poderiam ser específicos para um determinado SGBD, tornando mais fácil uma possível alteração no banco, necessitando apenas de um update no driver. Para implementar a autenticação com JWT utilizei o Flask-JWT-Extended que simplifica esse processo sem perder muito o controle sobre configuracões do JWT. Porém, uma desvantagem de se utilizar essa biblioteca é que ela pode ser descontinuada com o passar dos anos, podendo levar a problemas de manutenção e compatibilidade no longo prazo. Por último, para criar o PDF, utilizei a biblioteca Reportlab que é versátil, flexível e dá controle total sobre o layout e conteúdo.
 
-    No quesito de decisões arquitetônicas, utilizei a arquitetura em camadas. Nao sei se no Python ela faz sentido, mas as dividi da seguinte forma:
-    - Modelos: aqui ficam as classes que são utilizadas no banco de dados e representam entidades
-    - Rotas: aqui ficam todas as rotas que são mapeadas para métodos
-    - Serviços: aqui fica a lógica de negócios e validação de atributos
-    - Repositórios: aqui fica a interação com o banco de dados que encapsulam as consultas e operações do banco
+No quesito de decisões arquitetônicas, utilizei a arquitetura em camadas. Nao sei se no Python ela faz sentido, mas as dividi da seguinte forma:
+- Modelos: aqui ficam as classes que são utilizadas no banco de dados e representam entidades
+- Rotas: aqui ficam todas as rotas que são mapeadas para métodos
+- Serviços: aqui fica a lógica de negócios e validação de atributos
+- Repositórios: aqui fica a interação com o banco de dados que encapsulam as consultas e operações do banco
 
-    Além disso, uma abordagem com blueprints poderia ser recomendada para organizar as rotas de forma mais modular e escalável. No entanto, devido à falta de conhecimento avançado em Flask, optei por uma abordagem mais direta na definição das rotas.
+Além disso, uma abordagem com blueprints poderia ser recomendada para organizar as rotas de forma mais modular e escalável. No entanto, devido à falta de conhecimento avançado em Flask, optei por uma abordagem mais direta na definição das rotas.
 
-    Como o escopo desse projeto é pequeno só foram criados um arquivo para cada camada, porém ao ter mais entidades, o certo seria ter um arquivo para cada entidade, por exemplo:
+Como o escopo desse projeto é pequeno só foram criados um arquivo para cada camada, porém ao ter mais entidades, o certo seria ter um arquivo para cada entidade, por exemplo:
 
 - models/
   - user.py
