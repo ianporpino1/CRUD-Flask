@@ -7,6 +7,7 @@ import routes
 
 app = Flask(__name__)
 
+#Error handling metodos
 @app.errorhandler(InvalidCredentialsError)
 def handle_invalid_credentials_error(error):
     response = jsonify({'error': 'Invalid Credentials', 'message': 'Bad email or password'})
@@ -23,6 +24,7 @@ def handle_invalid_input_error(e):
     response.status_code = 400
     return response
 
+#configuracoes do banco e jwt
 app.config.from_object(Config)
 
 db.init_app(app)

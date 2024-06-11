@@ -28,13 +28,14 @@ def authenticate_user(email, password):
         return user
     raise InvalidCredentialsError
 
-def create_sale(nome_cliente, produto, valor, data_venda_str,user_id):
+def create_sale(nome_cliente, produto, valor, data_venda_str, user_email):
     #valida os inputs da venda
-    validar_sale(nome_cliente, produto, valor, data_venda_str)
+    validar_sale(nome_cliente, produto, valor, data_venda_str, user_email)
+
+    user_id = repo.get_user_id_from_email(user_email)
 
     #cria um datetime para ser armazenado no banco
     data_venda = datetime.strptime(data_venda_str, '%d-%m-%Y')
-    
     
     new_sale = Sale(nome_cliente=nome_cliente, produto=produto, valor=valor, data_venda=data_venda, user_id=user_id)
     repo.add_sale(new_sale)
@@ -48,7 +49,7 @@ def fetch_all_sales():
     return sales_dicts, 200
 
 
-def update_sale(sale_id, data):
+def update_sale(sale_id, data, user_email):
     sale = repo.get_sale_by_id(sale_id)
     if not sale:
         return {"msg": "Sale not found"}, 404
@@ -59,7 +60,9 @@ def update_sale(sale_id, data):
     valor = data.get('valor')
     data_venda_str = data.get('data_venda')
 
-    validar_sale(nome_cliente, produto, valor, data_venda_str)
+    validar_sale(nome_cliente, produto, valor, data_venda_str, user_email)
+
+    user_id = repo.get_user_id_from_email(user_email)
 
     if 'nome_cliente' in data:
         sale.nome_cliente = data.get('nome_cliente')
@@ -69,6 +72,8 @@ def update_sale(sale_id, data):
         sale.valor = data.get('valor')
     if 'data_venda' in data:
         sale.data_venda = datetime.strptime(data_venda_str, '%d-%m-%Y')
+    if user_id:
+        sale.user_id = user_id
     
     repo.update_sale()
     return {"msg": "Sale updated successfully"}, 200
@@ -82,12 +87,14 @@ def remove_sale(sale_id):
     return {"msg": "Sale deleted successfully"}, 200
 
 
-def generate_sales_pdf(start_date_str, end_date_str, user_id):
+def generate_sales_pdf(start_date_str, end_date_str, user_email):
 
     #por algum motivo, se start_date == data_venda, a venda nao é exibida no pdf
     um_dia = timedelta(days=1)
     start_date = datetime.strptime(start_date_str, '%d-%m-%Y') - um_dia
     end_date = datetime.strptime(end_date_str, '%d-%m-%Y')
+
+    user_id = repo.get_user_id_from_email(user_email)
 
     sales = repo.get_sales_by_period(start_date, end_date, user_id)
 
@@ -108,7 +115,6 @@ def generate_sales_pdf(start_date_str, end_date_str, user_id):
 
    
     for sale in sales:
-        print(sale)
         data.append([str(sale.id), str(sale.nome_cliente), str(sale.produto), str(sale.data_venda.strftime('%d-%m-%Y')),  str(sale.valor)])
 
 
@@ -136,7 +142,7 @@ def validar_email(email):
         return True
     return False
 
-def validar_sale(nome_cliente, produto, valor, data_venda_str):
+def validar_sale(nome_cliente, produto, valor, data_venda_str, user_email):
     try:
         datetime.strptime(data_venda_str, '%d-%m-%Y')
     except ValueError:
@@ -147,3 +153,6 @@ def validar_sale(nome_cliente, produto, valor, data_venda_str):
         raise InvalidInputError("Nome do produto nao pode ser nulo")
     if isinstance(valor, str) or valor < 0:
         raise InvalidInputError("Valor nao pode ser string ou negativo")
+    user_id = repo.get_user_id_from_email(user_email)
+    if not user_id:
+        raise InvalidInputError("User ID não encontrado")

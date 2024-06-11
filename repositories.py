@@ -8,6 +8,13 @@ def add_user(user):
 def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
 
+def get_user_id_from_email(email):
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return user.id
+    else:
+        None
+
 def add_sale(sale):
     db.session.add(sale)
     db.session.commit()

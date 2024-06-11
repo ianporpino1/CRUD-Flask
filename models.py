@@ -9,6 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
 
+    #Um usuario pode criar varias vendas, mas uma venda so estara ligada a um usuario
     vendas = db.relationship('Sale', back_populates='usuario', cascade='all, delete-orphan')
 
     def set_password(self, password):
