@@ -32,18 +32,80 @@ Como rodar:
 ### Autenticação
 
 - `POST /register`: Registrar um novo usuário.
+  - **Parâmetros de Entrada:**
+    - `email` (string): O email do usuário.
+    - `senha` (string): A senha do usuário.
+  - **Retorno Esperado:**
+    - Status 201: Usuário registrado com sucesso.
+    - Status 400: Erro de validação (ex: email já registrado).
+
 - `POST /login`: Login de um usuário.
+  - **Parâmetros de Entrada:**
+    - `email` (string): O email do usuário.
+    - `senha` (string): A senha do usuário.
+  - **Retorno Esperado:**
+    - Status 200: Login bem-sucedido. Retorna um token de autenticação.
+    - Status 401: Credenciais inválidas.
 
 ### Vendas
 
 - `GET /sales`: Consultar todas as vendas.
+  - **Parâmetros de Entrada:** Nenhum.
+  - **Retorno Esperado:**
+    - Status 200: Lista de todas as vendas.
+      ```json
+      [
+        {
+          "id": 1,
+          "nome_cliente": "Cliente A",
+          "produto": "Produto A",
+          "valor": 100,
+          "data_venda": "10-06-2023"
+        },
+        ...
+      ]
+      ```
+
 - `POST /sales`: Adicionar uma nova venda.
+  - **Parâmetros de Entrada:**
+    - `nome_cliente` (string): Nome do cliente.
+    - `produto` (string): Nome do produto.
+    - `valor` (int): Valor da venda.
+    - `data_venda` (string): Data da venda no formato dd-mm-yyyy.
+  - **Retorno Esperado:**
+    - Status 201: Venda criada com sucesso.
+    - Status 400: Erro de validação.
+
 - `PUT /sales/:id`: Editar uma venda existente.
+  - **Parâmetros de Entrada:**
+    - `id` (int): ID da venda a ser editada (no URL).
+    - `nome_cliente` (string): Nome do cliente.
+    - `produto` (string): Nome do produto.
+    - `valor` (int): Valor da venda.
+    - `data_venda` (string): Data da venda no formato dd-mm-yyyy.
+  - **Retorno Esperado:**
+    - Status 200: Venda atualizada com sucesso.
+    - Status 404: Venda não encontrada.
+    - Status 400: Erro de validação.
+
 - `DELETE /sales/:id`: Excluir uma venda existente.
+  - **Parâmetros de Entrada:**
+    - `id` (int): ID da venda a ser excluída (no URL).
+  - **Retorno Esperado:**
+    - Status 200: Venda excluída com sucesso.
+    - Status 404: Venda não encontrada.
 
 ### PDF
 
 - `GET /sales/pdf?start_date=DD-MM-YYYY&end_date=DD-MM-YYYY`: Gerar um PDF contendo todas as vendas entre start_date e end_date.
+  - **Parâmetros de Entrada:**
+    - `start_date` (string): Data de início no formato dd-mm-yyyy.
+    - `end_date` (string): Data de término no formato dd-mm-yyyy.
+  - **Retorno Esperado:**
+    - Status 200: PDF gerado com sucesso.
+    - Status 400: Erro de validação (ex: data inválida).
+    - Status 404: Nenhuma venda encontrada no período especificado.
+
 
 ## Tecnologias
 
