@@ -24,7 +24,7 @@ def handle_invalid_input_error(e):
     response.status_code = 400
     return response
 
-#configuracoes do banco e jwt
+#configuracoes do banco(in memory) e jwt
 app.config.from_object(Config)
 
 db.init_app(app)
