@@ -63,3 +63,4 @@ def register_routes(app):
         pdf_file =  generate_sales_pdf(start_date,end_date,user_id)
         return send_file(pdf_file, as_attachment=True, download_name='sales.pdf')
 
+
