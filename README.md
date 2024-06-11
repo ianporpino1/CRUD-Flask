@@ -91,7 +91,7 @@ Como rodar:
   - **Parâmetros de Entrada:**
     - `nome_cliente` (string): Nome do cliente.
     - `produto` (string): Nome do produto.
-    - `valor` (int): Valor da venda.
+    - `valor` (float): Valor da venda.
     - `data_venda` (string): Data da venda no formato dd-mm-yyyy.
   - **Retorno Esperado:**
     - Status 201: Venda criada com sucesso.
@@ -102,7 +102,7 @@ Como rodar:
     - `id` (int): ID da venda a ser editada (no URL).
     - `nome_cliente` (string): Nome do cliente.
     - `produto` (string): Nome do produto.
-    - `valor` (int): Valor da venda.
+    - `valor` (float): Valor da venda.
     - `data_venda` (string): Data da venda no formato dd-mm-yyyy.
   - **Retorno Esperado:**
     - Status 200: Venda atualizada com sucesso.
