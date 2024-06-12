@@ -83,7 +83,7 @@ def remove_sale(sale_id):
     return {"msg": "Sale deleted successfully"}, 200
 
 
-def generate_sales_pdf(start_date_str, end_date_str, user_id):
+def generate_sales_pdf(start_date_str, end_date_str):
 
     #por algum motivo, se start_date == data_venda, a venda nao é exibida no pdf
     um_dia = timedelta(days=1)
@@ -91,7 +91,7 @@ def generate_sales_pdf(start_date_str, end_date_str, user_id):
     end_date = datetime.strptime(end_date_str, '%d-%m-%Y')
 
     #procura por vendas no periodo especificado
-    sales = repo.get_sales_by_period(start_date, end_date, user_id)
+    sales = repo.get_sales_by_period(start_date, end_date)
     print(sales)
     if not sales:
         raise InvalidInputError("Nenhuma venda encontrada no período especificado.")

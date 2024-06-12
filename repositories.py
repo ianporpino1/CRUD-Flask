@@ -28,6 +28,6 @@ def delete_sale(sale):
     db.session.delete(sale)
     db.session.commit()
 
-def get_sales_by_period(start_date, end_date, user_id):
-    return Sale.query.filter(Sale.user_id == user_id, Sale.data_venda >= start_date, Sale.data_venda <= end_date).all()
+def get_sales_by_period(start_date, end_date):
+    return Sale.query.filter(Sale.data_venda >= start_date, Sale.data_venda <= end_date).all()
 

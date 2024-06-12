@@ -64,9 +64,9 @@ def register_routes(app):
     def generate_pdf():
         start_date = request.args.get("start_date")
         end_date = request.args.get("end_date")
-        user_id =  get_jwt_identity()
+        
 
-        pdf_file =  generate_sales_pdf(start_date,end_date,user_id)
+        pdf_file =  generate_sales_pdf(start_date,end_date)
         return send_file(pdf_file, as_attachment=True, download_name='sales.pdf')
 
 
