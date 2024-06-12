@@ -10,18 +10,18 @@ app = Flask(__name__)
 #Error handling metodos
 @app.errorhandler(InvalidCredentialsError)
 def handle_invalid_credentials_error(error):
-    response = jsonify({'error': 'Invalid Credentials', 'message': 'Bad email or password'})
-    response.status_code = 400
+    response = jsonify({'error': 'Invalid Credentials', 'message': 'Bad email or password'}, 401)
+    response.status_code
     return response
 @app.errorhandler(UserAlreadyExistsError)
 def handle_user_already_exists_error(error):
-    response = jsonify({'error': 'User Already Exists', 'message': 'User already exists, try another email'})
+    response = jsonify({'error': 'User Already Exists', 'message': 'User already exists, try another email'},400)
     response.status_code = 400
     return response
 @app.errorhandler(InvalidInputError)
-def handle_invalid_input_error(e):
-    response = jsonify({'error': 'Invalid Input', 'message': e.message})
-    response.status_code = 400
+def handle_invalid_input_error(error):
+    response = jsonify({'error': 'Invalid Input', 'message': error.message},error.code)
+    response.status_code = error.code
     return response
 
 #configuracoes do banco(in memory) e jwt

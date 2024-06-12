@@ -50,7 +50,7 @@ def fetch_all_sales():
 def update_sale(sale_id, data, user_id):
     sale = repo.get_sale_by_id(sale_id)
     if not sale:
-        return {"msg": "Sale not found"}, 404
+        raise InvalidInputError("Sale not found", 404)
 
     data_venda_str = data.get('data_venda')
     nome_cliente = data.get('nome_cliente')
@@ -77,7 +77,7 @@ def update_sale(sale_id, data, user_id):
 def remove_sale(sale_id):
     sale = repo.get_sale_by_id(sale_id)
     if not sale:
-        return {"msg": "Sale not found"}, 404
+        raise InvalidInputError("Sale not found", 404)
     
     repo.delete_sale(sale)
     return {"msg": "Sale deleted successfully"}, 200
@@ -93,7 +93,7 @@ def generate_sales_pdf(start_date_str, end_date_str):
     #procura por vendas no periodo especificado
     sales = repo.get_sales_by_period(start_date, end_date)
     if not sales:
-        raise InvalidInputError("Nenhuma venda encontrada no período especificado.")
+        raise InvalidInputError("Nenhuma venda encontrada no período especificado.", 404)
 
     buffer = BytesIO()
 
@@ -144,13 +144,13 @@ def validar_sale(nome_cliente, produto, valor, data_venda_str, user_id):
     try:
         datetime.strptime(data_venda_str, '%d-%m-%Y')
     except ValueError:
-        raise InvalidInputError("Data Inválida")
+        raise InvalidInputError("Data Inválida",400)
     if nome_cliente == "":
-        raise InvalidInputError("Nome do cliente nao pode ser nulo")
+        raise InvalidInputError("Nome do cliente nao pode ser nulo",400)
     if produto == "":
-        raise InvalidInputError("Nome do produto nao pode ser nulo")
+        raise InvalidInputError("Nome do produto nao pode ser nulo",400)
     if isinstance(valor, str) or valor < 0:
-        raise InvalidInputError("Valor nao pode ser string ou negativo")
+        raise InvalidInputError("Valor nao pode ser string ou negativo",400)
     user = repo.get_user_by_id(user_id)
     if not user:
-        raise InvalidInputError("User ID não encontrado")
+        raise InvalidInputError("User ID não encontrado",400)
