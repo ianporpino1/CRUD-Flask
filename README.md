@@ -14,7 +14,8 @@ Como rodar no Windows:
 2. Crie e ative um ambiente virtual:
     ```bash
     python -m venv .venv
-    ./.venv/Scripts/activate
+    ./.venv/Scripts/activate (PowerShell)
+    .venv\Scripts\activate (CMD)
     ```
 
 3. Instale as dependências:
@@ -27,7 +28,7 @@ Como rodar no Windows:
     python app.py
     ```
 
-## Exemplos com 'curl'
+## Exemplos com 'curl' (CMD)
 1. Registrar Usuário
     ```bash
     curl -X POST http://127.0.0.1:5000/register -d "{\"email\":\"seu@email.com\", \"password\":\"sua_senha\"}" -H "Content-Type: application/json"
