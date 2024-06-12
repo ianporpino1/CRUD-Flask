@@ -169,4 +169,4 @@ Como o escopo desse projeto é pequeno só foram criados um arquivo para cada ca
   - sale_repository.py
   - ...
 
-  Na questão de Error Handling, utilizei a criação de exceções personalizadas que são 'raised' pela camada de serviço, porém por não ter um conhecimento tão avançado de Flask, não achei que ficou bom, queria fazer o 'handle' delas no arquivo exceptions.py ao invés de no app.py.
+  Na questão de Error Handling, utilizei a criação de exceções personalizadas que são 'raised' pela camada de serviço, porém por não ter um conhecimento tão avançado de Flask, não achei que ficou bom, queria fazer o 'handle' delas no arquivo exceptions.py ao invés de no app.py, porém não foi possível pois o 'decorator' precisa saber da instância do 'app' que é definido no app.py.
