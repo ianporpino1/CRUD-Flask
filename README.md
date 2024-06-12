@@ -3,7 +3,7 @@ Aplicação CRUD com autenticação de Usuários com JWT para processo seletivo 
 Requisitos:
 - Python 3
 
-Como rodar:
+Como rodar no Windows:
 
 1. Clone o repositório:
     ```bash
@@ -14,7 +14,7 @@ Como rodar:
 2. Crie e ative um ambiente virtual:
     ```bash
     python -m venv .venv
-    ./venv/bin/activate
+    ./.venv/Scripts/activate
     ```
 
 3. Instale as dependências:
